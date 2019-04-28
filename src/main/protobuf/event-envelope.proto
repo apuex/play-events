@@ -1,0 +1,15 @@
+syntax = "proto3";
+import "google/protobuf/any.proto";
+
+package com.github.apuex.events.play;
+option java_package = "com.github.apuex.events.play";
+option java_outer_classname = "EventEnvelopeProto";
+option java_multiple_files = true;
+
+// final case class EventEnvelope(offset: Offset, persistenceId: String, sequenceNr: Long, event: Any)
+message EventEnvelope {
+  string offset = 1;
+  string persistenceId = 2;
+  int64 sequenceNr = 3;
+  google.protobuf.Any event = 4;
+}
