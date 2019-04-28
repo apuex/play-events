@@ -27,6 +27,7 @@ val akkaVersion = "2.5.22"
 val playVersion = "2.7.2"
 
 libraryDependencies ++= Seq(
+  "com.google.protobuf" % "protobuf-java" % "3.6.1" % "provided",
   "com.google.protobuf" % "protobuf-java-util" % "3.6.1" % "provided",
   "com.typesafe.akka" %% "akka-persistence-cassandra" % "0.93" % "provided",
   "com.typesafe.akka" %% "akka-persistence-query" % akkaVersion % "provided",
@@ -35,13 +36,42 @@ libraryDependencies ++= Seq(
   "com.typesafe.play" %% "play-specs2" % playVersion % "test"
 )
 
-licenses := Seq("MIT License" -> url("http://opensource.org/licenses/MIT"))
+fork in Test := true
 
 publishTo := sonatypePublishTo.value
-
 publishMavenStyle := true
+
+licenses := Seq("GPL3" -> url("https://www.gnu.org/licenses/gpl-3.0.txt"))
+
+sonatypeProfileName := "com.github.apuex"
+
 
 sonatypeProjectHosting := Some(GitHubHosting("apuex", "play-events", "xtwxy@hotmail.com"))
 
-fork in Test := true
+homepage := Some(url("https://github.com/apuex/play-events"))
+scmInfo := Some(
+  ScmInfo(
+    url("https://github.com/apuex/play-events.git"),
+    "scm:git@github.com:apuex/play-events.git"
+  )
+)
+
+developers := List(
+  Developer(id="apuex", name="Wangxy", email="xtwxy@hotmail.com", url=url("https://github.com/apuex"))
+)
+
+/*
+Command Line Usage
+
+Publish a GPG-signed artifact to Sonatype:
+
+$ sbt publishSigned
+
+Do close and promote at once:
+
+$ sbt sonatypeRelease
+*/
+
+
+
 
