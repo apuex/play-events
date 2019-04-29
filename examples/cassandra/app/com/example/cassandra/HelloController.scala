@@ -1,4 +1,4 @@
-package com.example.leveldb
+package com.example.cassandra
 
 import akka.actor.ActorRef
 import akka.pattern._
@@ -16,7 +16,7 @@ class HelloController @Inject()
   cc: ControllerComponents
 )(implicit ec: ExecutionContext)
   extends AbstractController(cc) {
-
+  val log = play.Logger.of("application")
   implicit val timeout: Timeout = FiniteDuration(60, SECONDS)
 
   def sayHello(to: String) = Action.async { _ =>

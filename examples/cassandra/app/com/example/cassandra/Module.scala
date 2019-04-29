@@ -1,4 +1,4 @@
-package com.example.leveldb
+package com.example.cassandra
 
 import com.github.apuex.events.play.EventsConfig
 import com.google.inject.AbstractModule

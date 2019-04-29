@@ -1,4 +1,4 @@
-package com.example.leveldb
+package com.example.cassandra
 
 import akka.actor.ActorSystem
 import akka.persistence.cassandra.query.scaladsl.CassandraReadJournal
