@@ -25,7 +25,7 @@ class EventsController @Inject()(config: EventsConfig, cc: ControllerComponents,
         else Offset.timeBasedUUID(UUID.fromString(x))
       })
       .getOrElse(Offset.noOffset)
-    val in = Sink.foreach[String](x => log.debug("{} from {}", x, request.remoteAddress))
+    val in = Sink.foreach[String](x => log.debug("[{}] from [{}]", x, request.remoteAddress))
     val out = config.readJournal
       .eventsByTag(config.eventTag, startPos)
       .filter(ee => ee.event.isInstanceOf[Message])
