@@ -24,7 +24,7 @@ class HelloActor
           SayHelloEvent
             .newBuilder()
             .setTo(x.getTo)
-            .setMessage(s"Hello, ${x.getTo}\n\t-- A warm welcome from ${HelloActor.name}")
+            .setMessage(s"Hello, ${x.getTo}!\n\t-- A warm welcome from ${HelloActor.name}.")
             .build(),
           tag
         )
