@@ -3,8 +3,7 @@ package com.github.apuex.events.play
 import java.util.UUID
 
 import akka.actor.ActorSystem
-import akka.persistence.cassandra.query.scaladsl.CassandraReadJournal
-import akka.persistence.query.{Offset, PersistenceQuery}
+import akka.persistence.query.Offset
 import akka.stream.scaladsl.{Flow, Sink}
 import com.google.protobuf.{Any, Message}
 import javax.inject.{Inject, Singleton}
@@ -12,8 +11,6 @@ import play.api.mvc.{AbstractController, ControllerComponents, WebSocket}
 
 @Singleton
 class EventsController @Inject()(config: EventsConfig, cc: ControllerComponents, system: ActorSystem) extends AbstractController(cc) {
-  val cassandraQueries = PersistenceQuery(system)
-    .readJournalFor[CassandraReadJournal](config.queryPluginId)
 
   def events(offset: String): WebSocket = WebSocket.accept[String, String] { request =>
     // Draining input events by Log events to the console
@@ -21,7 +18,7 @@ class EventsController @Inject()(config: EventsConfig, cc: ControllerComponents,
     // that causing resource exhausting.
     // because only unidirectional events pushing is allowed.
     val in = Sink.foreach[String](println)
-    val out = cassandraQueries
+    val out = config.readJournal
       .eventsByTag(config.eventTag, Offset.timeBasedUUID(UUID.fromString(offset)))
       .filter(ee => ee.event.isInstanceOf[Message])
       .map(ee => EventEnvelope
