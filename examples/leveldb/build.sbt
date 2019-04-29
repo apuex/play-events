@@ -15,8 +15,10 @@ libraryDependencies ++= Seq(
   "com.github.apuex" %% "play-events" % "1.0.0",
   "com.google.protobuf" % "protobuf-java" % "3.7.0",
   "com.google.protobuf" % "protobuf-java-util" % "3.7.0",
-  "com.typesafe.akka" %% "akka-persistence-cassandra" % "0.93" % "provided",
-  "com.typesafe.akka" %% "akka-persistence-query" % akkaVersion % "provided",
+  "com.typesafe.akka" %% "akka-persistence-cassandra" % "0.93",
+  "com.typesafe.akka" %% "akka-persistence-query" % akkaVersion,
+  "org.iq80.leveldb"  % "leveldb" % "0.11",
+  //"org.fusesource.leveldbjni"  % "leveldbjni-all" % "1.8",
   "org.scalatestplus.play" %% "scalatestplus-play" % "4.0.1" % Test
 )
 
@@ -40,4 +42,3 @@ assemblyMergeStrategy in assembly := {
     val oldStrategy = (assemblyMergeStrategy in assembly).value
     oldStrategy(x)
 }
-       

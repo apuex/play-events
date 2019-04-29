@@ -10,7 +10,7 @@ import javax.inject._
 
 @Singleton
 class LeveldbConfig @Inject()(system: ActorSystem) extends EventsConfig {
-  override def eventTag: String = "1.0.0"
+  override def eventTag: String = HelloActor.name
 
   override def printer: JsonFormat.Printer = {
     val registry = JsonFormat.TypeRegistry
@@ -21,6 +21,6 @@ class LeveldbConfig @Inject()(system: ActorSystem) extends EventsConfig {
     JsonFormat.printer().usingTypeRegistry(registry)
   }
 
-  override def readJournal : EventsByTagQuery= PersistenceQuery(system)
+  override def readJournal: EventsByTagQuery = PersistenceQuery(system)
     .readJournalFor[LeveldbReadJournal](LeveldbReadJournal.Identifier)
 }
