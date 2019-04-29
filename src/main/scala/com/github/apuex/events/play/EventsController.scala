@@ -10,20 +10,22 @@ import javax.inject.{Inject, Singleton}
 import play.api.mvc.{AbstractController, ControllerComponents, WebSocket}
 
 @Singleton
-class EventsController @Inject()(config: EventsConfig, cc: ControllerComponents, system: ActorSystem) extends AbstractController(cc) {
+class EventsController @Inject()(config: EventsConfig, cc: ControllerComponents, system: ActorSystem)
+  extends AbstractController(cc) {
+  val log = play.Logger.of("application")
 
-  def events(offset: Option[String]): WebSocket = WebSocket.accept[String, String] { _ =>
+  def events(offset: Option[String]): WebSocket = WebSocket.accept[String, String] { request =>
     // Draining input events by Log events to the console
     // just in case that large volumes of un-consumed messages from client side
     // that causing resource exhausting.
     // because only unidirectional events pushing is allowed.
     val startPos = offset
       .map(x => {
-        if(x.matches("^[\\+\\-]{0,1}[0-9]+$")) Offset.sequence(x.toLong)
+        if (x.matches("^[\\+\\-]{0,1}[0-9]+$")) Offset.sequence(x.toLong)
         else Offset.timeBasedUUID(UUID.fromString(x))
       })
       .getOrElse(Offset.noOffset)
-    val in = Sink.foreach[String](println)
+    val in = Sink.foreach[String](x => log.debug("{} from {}", x, request.host))
     val out = config.readJournal
       .eventsByTag(config.eventTag, startPos)
       .filter(ee => ee.event.isInstanceOf[Message])
