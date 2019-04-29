@@ -9,7 +9,7 @@ import com.google.protobuf.util.JsonFormat
 import javax.inject._
 
 @Singleton
-class LeveldbConfig @Inject()(system: ActorSystem) extends EventsConfig {
+class CassandraConfig @Inject()(system: ActorSystem) extends EventsConfig {
   override def eventTag: String = HelloActor.name
 
   override def printer: JsonFormat.Printer = {

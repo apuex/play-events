@@ -6,7 +6,7 @@ import play.api.libs.concurrent.AkkaGuiceSupport
 
 class Module extends AbstractModule with AkkaGuiceSupport {
   override def configure(): Unit = {
-    bind(classOf[EventsConfig]).to(classOf[LeveldbConfig])
+    bind(classOf[EventsConfig]).to(classOf[CassandraConfig])
     bindActor[HelloActor](HelloActor.name)
   }
 }
