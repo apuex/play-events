@@ -13,8 +13,8 @@ val akkaVersion = "2.5.22"
 libraryDependencies ++= Seq(
   guice,
   "com.github.apuex" %% "play-events" % "1.0.0",
-  "com.google.protobuf" % "protobuf-java" % "3.6.1",
-  "com.google.protobuf" % "protobuf-java-util" % "3.6.1",
+  "com.google.protobuf" % "protobuf-java" % "3.7.0",
+  "com.google.protobuf" % "protobuf-java-util" % "3.7.0",
   "com.typesafe.akka" %% "akka-persistence-cassandra" % "0.93" % "provided",
   "com.typesafe.akka" %% "akka-persistence-query" % akkaVersion % "provided",
   "org.scalatestplus.play" %% "scalatestplus-play" % "4.0.1" % Test

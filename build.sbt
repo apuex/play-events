@@ -27,8 +27,8 @@ val akkaVersion = "2.5.22"
 val playVersion = "2.7.2"
 
 libraryDependencies ++= Seq(
-  "com.google.protobuf" % "protobuf-java" % "3.6.1",
-  "com.google.protobuf" % "protobuf-java-util" % "3.6.1",
+  "com.google.protobuf" % "protobuf-java" % "3.7.0",
+  "com.google.protobuf" % "protobuf-java-util" % "3.7.0",
   "com.typesafe.akka" %% "akka-persistence-cassandra" % "0.93" % "provided",
   "com.typesafe.akka" %% "akka-persistence-query" % akkaVersion % "provided",
   "com.typesafe.play" %% "play" % playVersion % "provided",
