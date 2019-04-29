@@ -1,1 +1,1 @@
-GET     /events/:offset             com.github.apuex.events.play.EventsController.events(offset: String)
+GET     /events                     com.github.apuex.events.play.EventsController.events(offset: Option[String])
