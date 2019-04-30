@@ -15,6 +15,7 @@ libraryDependencies ++= Seq(
   "com.github.apuex" %% "play-events" % "1.0.0",
   "com.google.protobuf" % "protobuf-java" % "3.7.0",
   "com.google.protobuf" % "protobuf-java-util" % "3.7.0",
+  "com.typesafe.akka" %% "akka-cluster-tools" % akkaVersion,
   "com.typesafe.akka" %% "akka-persistence-query" % akkaVersion,
   "org.iq80.leveldb"  % "leveldb" % "0.11",
   "org.scalatestplus.play" %% "scalatestplus-play" % "4.0.1" % Test
