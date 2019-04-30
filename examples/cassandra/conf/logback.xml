@@ -26,6 +26,7 @@
 
   <logger name="play" level="INFO" />
   <logger name="application" level="INFO" />
+  <logger name="com.example" level="DEBUG" />
 
   <root level="WARN">
     <!--<appender-ref ref="ASYNCFILE" />-->

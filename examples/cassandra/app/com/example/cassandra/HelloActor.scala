@@ -1,7 +1,7 @@
 package com.example.cassandra
 
 import akka.actor.ActorLogging
-import akka.persistence.PersistentActor
+import akka.persistence._
 import akka.persistence.journal.Tagged
 
 object HelloActor {
@@ -12,9 +12,15 @@ class HelloActor
   extends PersistentActor
     with ActorLogging {
   val tag = Set(HelloActor.name)
+  val snapShotInterval = 1000
 
   override def receiveRecover: Receive = {
-    case _ =>
+    case SnapshotOffer(metadata, offeredSnapshot) =>
+      log.debug("snapshot state: {}", offeredSnapshot)
+    case RecoveryCompleted =>
+      log.debug("recovery completed.")
+    case x =>
+      updateStateWithTag(x)
   }
 
   override def receiveCommand: HelloActor.this.Receive = {
@@ -30,7 +36,7 @@ class HelloActor
         )
       )(updateStateWithTag)
     case x =>
-      log.info("unknown command: {}", x)
+      log.debug("unknown command: {}", x)
   }
 
   override def persistenceId: String = HelloActor.name
@@ -41,8 +47,12 @@ class HelloActor
   }
 
   private def updateState: (Any => Unit) = {
-    case x =>
+    case x: SayHelloEvent =>
+      if (lastSequenceNr % snapShotInterval == 0 && lastSequenceNr != 0) {
+        deleteSnapshots(SnapshotSelectionCriteria.Latest)
+        saveSnapshot(lastSequenceNr)
+      }
       sender() ! x
-      log.info("apply event to state: {}", x)
+    case x => log.info("unknown event: {}", x)
   }
 }
