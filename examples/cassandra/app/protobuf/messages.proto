@@ -13,3 +13,12 @@ message SayHelloEvent {
   string to = 1;
   string message = 2;
 }
+
+message TakeSnapshotCommand {
+
+}
+
+message ShutdownSystemCommand {
+
+}
+

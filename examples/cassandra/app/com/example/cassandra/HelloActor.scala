@@ -12,7 +12,8 @@ class HelloActor
   extends PersistentActor
     with ActorLogging {
   val tag = Set(HelloActor.name)
-  val snapShotInterval = 1000
+  val config = context.system.settings.config
+  val snapShotInterval = config.getLong("example.snapshot-interval")
 
   override def receiveRecover: Receive = {
     case SnapshotOffer(metadata, offeredSnapshot) =>
@@ -35,8 +36,15 @@ class HelloActor
           tag
         )
       )(updateStateWithTag)
+    case _: TakeSnapshotCommand =>
+      saveSnapshot(lastSequenceNr)
+    case _: ShutdownSystemCommand =>
+      saveSnapshot(lastSequenceNr)
+    case _: SaveSnapshotSuccess =>
+      log.debug("snapshot saved.")
+    case _: DeleteSnapshotsSuccess =>
     case x =>
-      log.debug("unknown command: {}", x)
+      log.info("unknown command: {}, {}", x.getClass.getName, x)
   }
 
   override def persistenceId: String = HelloActor.name
