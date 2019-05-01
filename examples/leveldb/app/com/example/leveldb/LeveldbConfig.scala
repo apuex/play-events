@@ -12,13 +12,18 @@ import javax.inject._
 class LeveldbConfig @Inject()(system: ActorSystem) extends EventsConfig {
   override def eventTag: String = HelloActor.name
 
+  val registry = JsonFormat.TypeRegistry
+    .newBuilder
+    .add(EventEnvelopeProto.getDescriptor.getMessageTypes)
+    .add(MessagesProto.getDescriptor.getMessageTypes)
+    .build
+
   override def printer: JsonFormat.Printer = {
-    val registry = JsonFormat.TypeRegistry
-      .newBuilder
-      .add(EventEnvelopeProto.getDescriptor.getMessageTypes)
-      .add(MessagesProto.getDescriptor.getMessageTypes)
-      .build
     JsonFormat.printer().usingTypeRegistry(registry)
+  }
+
+  override def parser: JsonFormat.Parser = {
+    JsonFormat.parser().usingTypeRegistry(registry)
   }
 
   override def readJournal: EventsByTagQuery = PersistenceQuery(system)

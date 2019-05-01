@@ -4,7 +4,7 @@ import java.util.UUID
 
 import akka.actor.ActorSystem
 import akka.persistence.query.Offset
-import akka.stream.scaladsl.{Flow, Sink}
+import akka.stream.scaladsl.Flow
 import com.google.protobuf.{Any, Message}
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.{AbstractController, ControllerComponents, WebSocket}
@@ -25,7 +25,12 @@ class EventsController @Inject()(config: EventsConfig, cc: ControllerComponents,
         else Offset.timeBasedUUID(UUID.fromString(x))
       })
       .getOrElse(Offset.noOffset)
-    val in = Sink.foreach[String](x => log.debug("[{}] from [{}]", x, request.remoteAddress))
+    val in = Flow.fromFunction[String, Message](x => {
+      val builder = Any.newBuilder()
+      config.parser.merge(x, builder)
+      builder.build()
+    })
+      .to(config.inbound)
     val out = config.readJournal
       .eventsByTag(config.eventTag, startPos)
       .filter(ee => ee.event.isInstanceOf[Message])
