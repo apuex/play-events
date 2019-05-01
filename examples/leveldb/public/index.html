@@ -53,13 +53,6 @@
     });
   });
 
-  var keepAlive = function() {
-    if(connected) {
-      socket.send("keep alive.");
-      setTimeout(keepAlive, timeout);
-    }
-  };
-
   var connect = function() {
       if (! connected) {
           socket = new WebSocket("ws://" + location.host + "/api/events");
@@ -67,7 +60,6 @@
               connected = true;
               console.log("Connected to the web socket");
               $("#connect").attr("disabled", true);
-              setTimeout(keepAlive, timeout);
           };
           socket.onmessage =function(m) {
               console.log("Got message: " + m.data);
