@@ -12,7 +12,7 @@ val akkaVersion = "2.5.22"
 
 libraryDependencies ++= Seq(
   guice,
-  "com.github.apuex" %% "play-events" % "1.0.0",
+  "com.github.apuex" %% "play-events" % "1.0.1",
   "com.google.protobuf" % "protobuf-java" % "3.7.0",
   "com.google.protobuf" % "protobuf-java-util" % "3.7.0",
   "com.typesafe.akka" %% "akka-cluster-tools" % akkaVersion,

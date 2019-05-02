@@ -7,7 +7,7 @@ lazy val `play-events` = (project in file("."))
   .enablePlugins(SbtTwirl)
 
 name := "play-events"
-version      := "1.0.0"
+version      := "1.0.1"
 organization := "com.github.apuex"
 maintainer   := "xtwxy@hotmail.com"
 
