@@ -87,7 +87,7 @@
   };
 
   var send = function() {
-    $.get("http://" + location.host + "/api/say-hello?to=" + $("#to").val(),
+    $.get("http://" + location.host + "/api/say-hello?to=" + encodeURIComponent($("#to").val()),
       function (data) {
         $("#message").html(data);
       }
