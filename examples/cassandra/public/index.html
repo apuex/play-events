@@ -71,7 +71,7 @@
           };
           socket.onmessage =function(m) {
               console.log("Got message: " + m.data);
-              $("#events").append(m.data + "\n");
+              $("#events").prepend(m.data + "\n");
               scrollToBottom();
           };
           socket.onclose = function() {
