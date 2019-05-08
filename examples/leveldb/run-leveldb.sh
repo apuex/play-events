@@ -1,7 +1,16 @@
 #! /bin/bash
-LAUNCHER_DIR=$(dirname $0) 
-java -DHOSTNAME=113.108.158.19 \
-	-DSEED_NODE=113.108.158.19 \
-	-Dplay.server.http.port=8000 \
-	-jar $LAUNCHER_DIR/target/scala-2.12/leveldb-assembly-1.0-SNAPSHOT.jar &
+LAUNCHER_DIR=$(dirname $0)
+HOSTNAME=192.168.0.78
+AKKAPORT=2558
+HTTPPORT=8000
+SEED_NODE="$HOSTNAME:$AKKAPORT"
+APPLICATION_SECRET="cfd16c3a-f0f2-4fa9-8e58-ff9a2ad2a422"
+
+java -DHOSTNAME=$HOSTNAME \
+	-DPORT=$AKKAPORT \
+	-DSEED_NODE=$SEED_NODE \
+	-DAPPLICATION_SECRET=$APPLICATION_SECRET \
+	-Dplay.server.http.port=$HTTPPORT \
+	-jar $LAUNCHER_DIR/target/scala-2.12/leveldb-assembly-1.0-SNAPSHOT.jar \
+	&>> leveldb-assembly-1.0-SNAPSHOT.log &
 

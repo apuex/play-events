@@ -14,6 +14,8 @@ tmp/
 **/*.protobin
 **/*.jar
 **/RUNNING_PID
-logs
+logs/
+log/
+**/*.log
 workspace.xml
 target

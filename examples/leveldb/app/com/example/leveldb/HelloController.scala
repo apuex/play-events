@@ -31,6 +31,10 @@ class HelloController @Inject()
     }
   }
 
+  def echo(msg: String): Action[AnyContent] = Action{ _ =>
+    Ok(msg)
+  }
+
   def takeSnapshot = Action { _ =>
     helloActor.tell(
       TakeSnapshotCommand

@@ -4,7 +4,7 @@ import akka.Done
 import akka.actor.ActorSystem
 import akka.persistence.query.journal.leveldb.scaladsl.LeveldbReadJournal
 import akka.persistence.query.scaladsl.EventsByTagQuery
-import akka.persistence.query.{Offset, PersistenceQuery}
+import akka.persistence.query.{Offset, PersistenceQuery, Sequence, TimeBasedUUID}
 import akka.stream.scaladsl.Sink
 import com.github.apuex.events.play.{EventEnvelope, EventEnvelopeProto, EventsConfig}
 import com.google.protobuf.util.JsonFormat
@@ -38,7 +38,11 @@ class LeveldbConfig @Inject()(system: ActorSystem) extends EventsConfig {
     .map(ee => EventEnvelope
       .newBuilder()
       .setSequenceNr(ee.sequenceNr)
-      .setOffset(ee.offset.toString)
+      .setOffset(ee.offset match {
+        case Sequence(value) => value.toString
+        case TimeBasedUUID(value) => value.toString
+        case x => x.toString
+      })
       .setPersistenceId(ee.persistenceId)
       .setEvent(Any.pack(ee.event.asInstanceOf[Message]))
       .build()
