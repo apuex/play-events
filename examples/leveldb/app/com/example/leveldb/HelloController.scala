@@ -22,24 +22,19 @@ class HelloController @Inject()
 
   def sayHello(to: String): Action[AnyContent] = Action.async { _ =>
     helloActor.ask(
-      SayHelloCommand
-        .newBuilder()
-        .setTo(to)
-        .build()
+      SayHelloCommand(to)
     ).mapTo[SayHelloEvent].map {
-      case x: SayHelloEvent => Ok(x.getMessage)
+      case x: SayHelloEvent => Ok(x.message)
     }
   }
 
-  def echo(msg: String): Action[AnyContent] = Action{ _ =>
+  def echo(msg: String): Action[AnyContent] = Action { _ =>
     Ok(msg)
   }
 
   def takeSnapshot = Action { _ =>
     helloActor.tell(
-      TakeSnapshotCommand
-        .newBuilder()
-        .build(),
+      TakeSnapshotCommand(),
       ActorRef.noSender
     )
     Ok("take snapshot command issued.")
@@ -47,9 +42,7 @@ class HelloController @Inject()
 
   def shutdownSystem: Action[AnyContent] = Action.async { _ =>
     helloActor.tell(
-      ShutdownSystemCommand
-        .newBuilder()
-        .build(),
+      ShutdownSystemCommand(),
       ActorRef.noSender
     )
     system.terminate()

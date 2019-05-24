@@ -1,13 +1,12 @@
 import xerial.sbt.Sonatype._
 
 lazy val `play-events` = (project in file("."))
-  .enablePlugins(ProtobufPlugin)
   .enablePlugins(play.sbt.routes.RoutesCompiler)
   .enablePlugins(GitVersioning)
   .enablePlugins(SbtTwirl)
 
 name := "play-events"
-version      := "1.0.1"
+version      := "1.0.2"
 organization := "com.github.apuex"
 maintainer   := "xtwxy@hotmail.com"
 
@@ -27,13 +26,16 @@ val akkaVersion = "2.5.22"
 val playVersion = "2.7.2"
 
 libraryDependencies ++= Seq(
-  "com.google.protobuf" % "protobuf-java" % "3.7.0",
-  "com.google.protobuf" % "protobuf-java-util" % "3.7.0",
+  "com.thesamet.scalapb" %% "scalapb-runtime" % scalapb.compiler.Version.scalapbVersion % "protobuf",
   "com.typesafe.akka" %% "akka-persistence-cassandra" % "0.93" % "provided",
   "com.typesafe.akka" %% "akka-persistence-query" % akkaVersion % "provided",
   "com.typesafe.play" %% "play" % playVersion % "provided",
   "com.typesafe.play" %% "play-test" % playVersion % "test",
   "com.typesafe.play" %% "play-specs2" % playVersion % "test"
+)
+
+PB.targets in Compile := Seq(
+  scalapb.gen() -> (sourceManaged in Compile).value
 )
 
 fork in Test := true

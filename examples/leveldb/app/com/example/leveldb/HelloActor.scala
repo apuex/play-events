@@ -28,11 +28,7 @@ class HelloActor
     case x: SayHelloCommand =>
       persist(
         Tagged(
-          SayHelloEvent
-            .newBuilder()
-            .setTo(x.getTo)
-            .setMessage(s"Hello, ${x.getTo}!\n\t-- A warm welcome from ${HelloActor.name}.")
-            .build(),
+          SayHelloEvent(x.to, s"Hello, ${x.to}!\n\t-- A warm welcome from ${HelloActor.name}."),
           tag
         )
       )(updateStateWithTag)

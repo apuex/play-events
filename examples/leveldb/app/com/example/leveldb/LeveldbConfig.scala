@@ -7,9 +7,11 @@ import akka.persistence.query.scaladsl.EventsByTagQuery
 import akka.persistence.query.{Offset, PersistenceQuery, Sequence, TimeBasedUUID}
 import akka.stream.scaladsl.Sink
 import com.github.apuex.events.play.{EventEnvelope, EventEnvelopeProto, EventsConfig}
-import com.google.protobuf.util.JsonFormat
-import com.google.protobuf.{Any, Message}
+import com.google.protobuf.any.Any
 import javax.inject._
+import scalapb.GeneratedMessage
+import scalapb.json4s.JsonFormat.GenericCompanion
+import scalapb.json4s._
 
 import scala.concurrent.Future
 
@@ -17,15 +19,14 @@ import scala.concurrent.Future
 class LeveldbConfig @Inject()(system: ActorSystem) extends EventsConfig {
   val eventTag: String = HelloActor.name
 
-  val registry = JsonFormat.TypeRegistry
-    .newBuilder
-    .add(EventEnvelopeProto.getDescriptor.getMessageTypes)
-    .add(MessagesProto.getDescriptor.getMessageTypes)
-    .build
+  // json parser and printer
+  val messagesCompanions = MessagesProto.messagesCompanions ++ EventEnvelopeProto.messagesCompanions :+ Any
+  val registry: TypeRegistry = messagesCompanions
+    .foldLeft(TypeRegistry())((r, mc) => r.addMessageByCompanion(mc.asInstanceOf[GenericCompanion]))
 
-  val printer = JsonFormat.printer().usingTypeRegistry(registry)
+  val printer = new Printer().withTypeRegistry(registry)
 
-  val parser = JsonFormat.parser().usingTypeRegistry(registry)
+  val parser = new Parser().withTypeRegistry(registry)
 
   val readJournal: EventsByTagQuery = PersistenceQuery(system)
     .readJournalFor[LeveldbReadJournal](LeveldbReadJournal.Identifier)
@@ -34,18 +35,16 @@ class LeveldbConfig @Inject()(system: ActorSystem) extends EventsConfig {
 
   override def outbound(offset: Offset) = readJournal
     .eventsByTag(eventTag, offset)
-    .filter(ee => ee.event.isInstanceOf[Message])
-    .map(ee => EventEnvelope
-      .newBuilder()
-      .setSequenceNr(ee.sequenceNr)
-      .setOffset(ee.offset match {
+    .filter(ee => ee.event.isInstanceOf[GeneratedMessage])
+    .map(ee => EventEnvelope(
+      ee.offset match {
         case Sequence(value) => value.toString
         case TimeBasedUUID(value) => value.toString
         case x => x.toString
-      })
-      .setPersistenceId(ee.persistenceId)
-      .setEvent(Any.pack(ee.event.asInstanceOf[Message]))
-      .build()
+      },
+      ee.persistenceId,
+      ee.sequenceNr,
+      Some(Any.of(s"type.googleapis.com/${ee.event.getClass.getName}", ee.event.asInstanceOf[GeneratedMessage].toByteString)))
     )
     .map(printer.print(_))
 }

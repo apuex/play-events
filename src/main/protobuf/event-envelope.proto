@@ -6,6 +6,11 @@ option java_package = "com.github.apuex.events.play";
 option java_outer_classname = "EventEnvelopeProto";
 option java_multiple_files = true;
 
+import "scalapb/scalapb.proto";
+option (scalapb.options) = {
+  flat_package: true
+};
+
 // final case class EventEnvelope(offset: Offset, persistenceId: String, sequenceNr: Long, event: Any)
 message EventEnvelope {
   string offset = 1;

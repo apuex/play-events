@@ -1,10 +1,9 @@
 name := """leveldb"""
 organization := "com.example"
 version := "1.0-SNAPSHOT"
-maintainer   := "xtwxy@hotmail.com"
+maintainer := "xtwxy@hotmail.com"
 
 lazy val leveldb = (project in file("."))
-  .enablePlugins(ProtobufPlugin)
   .enablePlugins(PlayScala)
 
 scalaVersion := "2.12.8"
@@ -12,15 +11,18 @@ val akkaVersion = "2.5.22"
 
 libraryDependencies ++= Seq(
   guice,
-  "com.github.apuex" %% "play-events" % "1.0.1",
-  "com.google.protobuf" % "protobuf-java" % "3.7.0",
-  "com.google.protobuf" % "protobuf-java-util" % "3.7.0",
+  "com.thesamet.scalapb" %% "scalapb-runtime" % scalapb.compiler.Version.scalapbVersion % "protobuf",
+  "com.thesamet.scalapb" %% "scalapb-json4s" % "0.9.0-M1",
+  "com.github.apuex" %% "play-events" % "1.0.2",
   "com.typesafe.akka" %% "akka-cluster-tools" % akkaVersion,
   "com.typesafe.akka" %% "akka-persistence-query" % akkaVersion,
-  "org.fusesource.leveldbjni"  % "leveldbjni-all" % "1.8",
+  "org.fusesource.leveldbjni" % "leveldbjni-all" % "1.8",
   "org.scalatestplus.play" %% "scalatestplus-play" % "4.0.1" % Test
 )
 
+PB.targets in Compile := Seq(
+  scalapb.gen() -> (sourceManaged in Compile).value
+)
 
 assemblyJarName in assembly := s"${name.value}-assembly-${version.value}.jar"
 mainClass in assembly := Some("play.core.server.ProdServerStart")
