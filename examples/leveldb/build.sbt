@@ -1,6 +1,6 @@
 name := """leveldb"""
 organization := "com.example"
-version := "1.0-SNAPSHOT"
+version := "1.0.1"
 maintainer := "xtwxy@hotmail.com"
 
 lazy val leveldb = (project in file("."))
