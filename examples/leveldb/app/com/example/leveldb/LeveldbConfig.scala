@@ -31,7 +31,7 @@ class LeveldbConfig @Inject()(system: ActorSystem) extends EventsConfig {
   val readJournal: EventsByTagQuery = PersistenceQuery(system)
     .readJournalFor[LeveldbReadJournal](LeveldbReadJournal.Identifier)
 
-  override def inbound: Sink[String, Future[Done]] = Sink.ignore
+  override def inbound: Sink[String, Future[Done]] = Sink.foreach(println)
 
   override def outbound(offset: Offset) = readJournal
     .eventsByTag(eventTag, offset)
