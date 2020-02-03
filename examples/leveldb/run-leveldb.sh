@@ -1,6 +1,6 @@
 #! /bin/bash
 LAUNCHER_DIR=$(dirname $0)
-HOSTNAME=192.168.0.78
+HOSTNAME=concerto
 AKKAPORT=2558
 HTTPPORT=8000
 SEED_NODE="$HOSTNAME:$AKKAPORT"
@@ -11,6 +11,6 @@ java -DHOSTNAME=$HOSTNAME \
 	-DSEED_NODE=$SEED_NODE \
 	-DAPPLICATION_SECRET=$APPLICATION_SECRET \
 	-Dplay.server.http.port=$HTTPPORT \
-	-jar $LAUNCHER_DIR/target/scala-2.12/leveldb-assembly-1.0-SNAPSHOT.jar \
+	-jar $LAUNCHER_DIR/target/scala-2.12/leveldb-assembly-1.0.1.jar \
 	&>> leveldb-assembly-1.0-SNAPSHOT.log &
 
